@@ -1,6 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.chrome import options
-from selenium.webdriver.chrome.options import Options
 import smtplib
 
 #email sender
@@ -22,14 +20,22 @@ Subject: %s
 
 #get the website to scrape
 url='https://corleoneristorante.hu/nyertesek'
-options = Options()
-options.set_headless(headless=True)
 
-browser = webdriver.Chrome(chrome_options=options)
-browser.get(url)
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
 
-nev = (browser.find_element_by_xpath('//*[@id="get_gp_dailyprize_winners"]/div[1]/span[1]')).text
-#nev = (browser.find_element_by_xpath('//*[@id="gp_dailyprize_winners_backup"]/div[106]/span[1]')).text
+browser = webdriver.Chrome(options=chrome_options)
+
+nev = "semmi"
+
+try:
+    browser.get("https://www.google.com")
+    nev = (browser.find_element_by_xpath('//*[@id="get_gp_dailyprize_winners"]/div[1]/span[1]')).text
+    print(nev)
+finally:
+    browser.quit()
 
 print(nev)
 
@@ -44,4 +50,4 @@ if 'Kristóf Lovász' in nev:
     except Exception as ex:
         print ("Something went wrong….",ex)
 else:
-    print('nem nyyertel')
+    print('nem nyertel')
